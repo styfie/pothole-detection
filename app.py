@@ -62,6 +62,26 @@ header[data-testid="stHeader"]{background:transparent!important}
 .st-key-settings_panel{min-height:730px!important}
 /* Comfortable bottom breathing room for the result box. */
 .st-key-workspace_panel{padding-bottom:24px!important;box-sizing:border-box!important}
+
+/* Model and variant choices: bordered rounded cards with hover feedback. */
+.st-key-settings_panel [data-testid="stRadio"] [role="radiogroup"]{display:flex!important;flex-direction:column!important;gap:8px!important}
+.st-key-settings_panel [data-testid="stRadio"] [role="radiogroup"]>label{width:100%!important;min-height:45px!important;padding:9px 12px!important;background:#fff!important;border:1px solid #dedcd5!important;border-radius:10px!important;cursor:pointer!important;transition:background-color .18s,border-color .18s!important}
+.st-key-settings_panel [data-testid="stRadio"] [role="radiogroup"]>label:hover{background:#fffbe8!important;border-color:#e5d46e!important}
+.st-key-settings_panel [data-testid="stRadio"] [role="radiogroup"]>label:has(input:checked){background:#fff7b8!important;border-color:#e3cb55!important}
+/* Three equal-width input-source segments. */
+.st-key-workspace_panel [data-testid="stSegmentedControl"]{width:100%!important}
+.st-key-workspace_panel [data-testid="stSegmentedControl"] [role="radiogroup"]{display:flex!important;width:100%!important;gap:0!important}
+.st-key-workspace_panel [data-testid="stSegmentedControl"] button{flex:1 1 0!important;min-height:48px!important;border:1px solid #e4dfcf!important;border-radius:0!important;background:#faf9f5!important;color:#555!important;transition:background-color .18s!important}
+.st-key-workspace_panel [data-testid="stSegmentedControl"] button:hover{background:#fffbe8!important}
+.st-key-workspace_panel [data-testid="stSegmentedControl"] button[aria-checked="true"],.st-key-workspace_panel [data-testid="stSegmentedControl"] button[aria-pressed="true"],.st-key-workspace_panel [data-testid="stSegmentedControl"] button[data-state="active"]{background:#fff4a8!important;color:#1d2230!important}
+.st-key-workspace_panel [data-testid="stSegmentedControl"] button:first-child{border-radius:10px 0 0 10px!important}
+.st-key-workspace_panel [data-testid="stSegmentedControl"] button:last-child{border-radius:0 10px 10px 0!important}
+/* Dedicated nested media surfaces: gray backdrop, centered 70%-width media. */
+.st-key-input_preview,.st-key-output_preview{background:#f0f0ed!important;background-image:none!important;border:1px solid #dedcd5!important;border-radius:12px!important;padding:16px!important;margin-top:10px!important;margin-bottom:18px!important;box-sizing:border-box!important}
+.st-key-input_preview>div,.st-key-output_preview>div{background:transparent!important}
+.st-key-input_preview img,.st-key-output_preview img,.st-key-input_preview video,.st-key-output_preview video{border-radius:7px!important}
+.st-key-workspace_panel{padding-bottom:24px!important}
+
 /* Preview size is controlled by dedicated columns in Python. */
 @media(max-width:850px){.st-key-settings_panel{min-height:0!important}}
 @media(max-width:850px){.brand-title{font-size:22px}.brand-subtitle{font-size:10px}.app-header{padding:10px 14px}.brand-logo{width:60px;height:55px}.block-container{padding:.7rem!important}}
@@ -94,14 +114,14 @@ def show_result(result: dict | None) -> None:
     if result is None:
         st.markdown('<div class="empty-result">Detection results will appear here after running the model.</div>', unsafe_allow_html=True)
         return
-    if result["kind"] == "image":
+    with st.container(border=False, key="output_preview"):
         preview_left, preview_center, preview_right = st.columns([1.5, 7, 1.5], gap="small")
         with preview_center:
-            st.image(result["content"], use_container_width=True)
-    else:
-        preview_left, preview_center, preview_right = st.columns([1.5, 7, 1.5], gap="small")
-        with preview_center:
-            st.video(result["content"])
+            if result["kind"] == "image":
+                st.image(result["content"], use_container_width=True)
+            else:
+                st.video(result["content"])
+    if result["kind"] == "video":
         st.download_button("Download Result Video", result["content"], file_name="pothole_detection_result.mp4", mime="video/mp4", use_container_width=True)
     stats = result["stats"]
     detection_label = f'{stats["detections"]} frame detections' if result["kind"] == "video" else f'{stats["detections"]} potholes'
@@ -143,20 +163,22 @@ with left:
 with right:
     with st.container(border=True, key="workspace_panel"):
         st.markdown('<div class="section-heading">⇧ &nbsp; Input Source</div>', unsafe_allow_html=True)
-        source = st.radio("Input Source", ["Image", "Video", "Camera"], horizontal=True, label_visibility="collapsed", key="source", on_change=reset_result)
+        source = st.segmented_control("Input Source", options=["Image", "Video", "Camera"], default="Image", selection_mode="single", label_visibility="collapsed", key="source", on_change=reset_result)
         upload = None
         if source == "Image":
             upload = st.file_uploader("Upload Image", type=["jpg", "jpeg", "png"], help="Drag and drop an image here, or choose a file from your computer.", key="image_upload", on_change=reset_result)
             if upload is not None:
-                preview_left, preview_center, preview_right = st.columns([1.5, 7, 1.5], gap="small")
-                with preview_center:
-                    st.image(upload, use_container_width=True)
+                with st.container(border=False, key="input_preview"):
+                    preview_left, preview_center, preview_right = st.columns([1.5, 7, 1.5], gap="small")
+                    with preview_center:
+                        st.image(upload, use_container_width=True)
         elif source == "Video":
             upload = st.file_uploader("Upload Video", type=["mp4", "mov", "avi", "mkv", "webm"], help="MP4, MOV, AVI, MKV, WEBM", key="video_upload", on_change=reset_result)
             if upload is not None:
-                preview_left, preview_center, preview_right = st.columns([1.5, 7, 1.5], gap="small")
-                with preview_center:
-                    st.video(upload)
+                with st.container(border=False, key="input_preview"):
+                    preview_left, preview_center, preview_right = st.columns([1.5, 7, 1.5], gap="small")
+                    with preview_center:
+                        st.video(upload)
         else:
             st.markdown('<div class="camera-intro"><strong>Browser Camera</strong><p>Open your browser camera for real-time pothole detection.</p></div>', unsafe_allow_html=True)
             st.caption("Camera permission will be requested by your browser")
