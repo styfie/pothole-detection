@@ -1,0 +1,9 @@
+streamlit
+streamlit-webrtc
+av
+ultralytics==8.4.62
+torch
+torchvision
+opencv-python-headless
+numpy
+Pillow
