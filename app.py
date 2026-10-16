@@ -215,7 +215,7 @@ with left:
         st.markdown('**Model**')
         for family in ("YOLO26", "RT-DETR"):
             st.button(
-                "◉  " + family if st.session_state.model_family == family else "◯  " + family,
+                "" + family if st.session_state.model_family == family else "" + family,
                 key=f"pick_model_{family.lower().replace('-', '_')}",
                 use_container_width=True,
                 type="primary" if st.session_state.model_family == family else "secondary",
@@ -228,7 +228,7 @@ with left:
             st.session_state.model_variant = variants[0]
         for index, item in enumerate(variants):
             st.button(
-                "◉  " + item if st.session_state.model_variant == item else "◯  " + item,
+                "" + item if st.session_state.model_variant == item else "" + item,
                 key=f"pick_variant_{index}",
                 use_container_width=True,
                 type="primary" if st.session_state.model_variant == item else "secondary",
@@ -244,7 +244,7 @@ with right:
         st.markdown('<div class="section-heading">⇧ &nbsp; Input Source</div>', unsafe_allow_html=True)
         with st.container(key="source_selector"):
             source_columns = st.columns(3, gap=None)
-            for col, item, symbol in zip(source_columns, ("Image", "Video", "Camera"), ("▧", "▣", "▤")):
+            for col, item, symbol in zip(source_columns, ("Image", "Video", "Camera"), ("", "", "")):
                 with col:
                     st.button(
                         f"{symbol}  {item}", key=f"source_{item.lower()}",
