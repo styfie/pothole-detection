@@ -63,108 +63,55 @@ header[data-testid="stHeader"]{background:transparent!important}
 /* Comfortable bottom breathing room for the result box. */
 .st-key-workspace_panel{padding-bottom:24px!important;box-sizing:border-box!important}
 
-/* Model and variant choices: bordered rounded cards with hover feedback. */
-.st-key-settings_panel [data-testid="stRadio"] [role="radiogroup"]{display:flex!important;flex-direction:column!important;gap:8px!important}
-.st-key-settings_panel [data-testid="stRadio"] [role="radiogroup"]>label{width:100%!important;min-height:45px!important;padding:9px 12px!important;background:#fff!important;border:1px solid #dedcd5!important;border-radius:10px!important;cursor:pointer!important;transition:background-color .18s,border-color .18s!important}
-.st-key-settings_panel [data-testid="stRadio"] [role="radiogroup"]>label:hover{background:#fffbe8!important;border-color:#e5d46e!important}
-.st-key-settings_panel [data-testid="stRadio"] [role="radiogroup"]>label:has(input:checked){background:#fff7b8!important;border-color:#e3cb55!important}
-/* Three equal-width input-source segments. */
-.st-key-workspace_panel [data-testid="stSegmentedControl"]{width:100%!important}
-.st-key-workspace_panel [data-testid="stSegmentedControl"] [role="radiogroup"]{display:flex!important;width:100%!important;gap:0!important}
-.st-key-workspace_panel [data-testid="stSegmentedControl"] button{flex:1 1 0!important;min-height:48px!important;border:1px solid #e4dfcf!important;border-radius:0!important;background:#faf9f5!important;color:#555!important;transition:background-color .18s!important}
-.st-key-workspace_panel [data-testid="stSegmentedControl"] button:hover{background:#fffbe8!important}
-.st-key-workspace_panel [data-testid="stSegmentedControl"] button[aria-checked="true"],.st-key-workspace_panel [data-testid="stSegmentedControl"] button[aria-pressed="true"],.st-key-workspace_panel [data-testid="stSegmentedControl"] button[data-state="active"]{background:#fff4a8!important;color:#1d2230!important}
-.st-key-workspace_panel [data-testid="stSegmentedControl"] button:first-child{border-radius:10px 0 0 10px!important}
-.st-key-workspace_panel [data-testid="stSegmentedControl"] button:last-child{border-radius:0 10px 10px 0!important}
-/* ============================================================
-   RADIO CARDS - Model and Variant (Streamlit nested label safe)
-   ============================================================ */
-.st-key-settings_panel [data-testid="stRadio"] div[role="radiogroup"] {
-    display:flex!important;
-    flex-direction:column!important;
-    align-items:stretch!important;
-    width:100%!important;
-    gap:8px!important;
+/* Full-width model and variant controls: actual Streamlit buttons, not radio labels. */
+.st-key-settings_panel [data-testid="stButton"] button {
+  width:100%!important; min-height:46px!important; display:flex!important;
+  justify-content:flex-start!important; text-align:left!important;
+  padding:10px 14px!important; border:1px solid #dedcd5!important;
+  border-radius:9px!important; background:#fff!important; color:#1d2230!important;
+  font-size:13px!important; font-weight:650!important;
+  transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease!important;
 }
-.st-key-settings_panel [data-testid="stRadio"] div[role="radiogroup"] > div {
-    width:100%!important;
+.st-key-settings_panel [data-testid="stButton"] button:hover {
+  background:#fffbe8!important; border-color:#d9c75d!important;
+  box-shadow:0 2px 7px rgba(0,0,0,.035)!important;
 }
-.st-key-settings_panel [data-testid="stRadio"] div[role="radiogroup"] label {
-    box-sizing:border-box!important;
-    display:flex!important;
-    align-items:center!important;
-    width:100%!important;
-    min-height:46px!important;
-    padding:10px 12px!important;
-    margin:0!important;
-    border:1px solid #dedcd5!important;
-    border-radius:10px!important;
-    background-color:#ffffff!important;
-    cursor:pointer!important;
-    transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+.st-key-settings_panel [data-testid="stButton"] button[kind="primary"] {
+  background:#fff7b8!important; border-color:#e3cb55!important; color:#1d2230!important;
 }
-.st-key-settings_panel [data-testid="stRadio"] div[role="radiogroup"] label:hover {
-    background-color:#fffbe8!important;
-    border-color:#d9c75d!important;
-    box-shadow:0 2px 7px rgba(0,0,0,.035)!important;
+.st-key-settings_panel [data-testid="stButton"] button[kind="primary"]:hover {
+  background:#f9ed9d!important;
 }
-.st-key-settings_panel [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked),
-.st-key-settings_panel [data-testid="stRadio"] div[role="radiogroup"] label:has([aria-checked="true"]) {
-    background-color:#fff7b8!important;
-    border-color:#e3cb55!important;
+/* Keep the actual Run Detection button visually distinct. */
+.st-key-settings_panel .st-key-run_detection button[kind="primary"] {
+  justify-content:center!important; background:linear-gradient(135deg,#ffffc5,#f0df7b)!important;
+  border-color:#d7c45e!important; font-weight:800!important; min-height:46px!important;
 }
-.st-key-settings_panel [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked):hover,
-.st-key-settings_panel [data-testid="stRadio"] div[role="radiogroup"] label:has([aria-checked="true"]):hover {
-    background-color:#f9ed9d!important;
+/* Three real buttons in equal Streamlit columns, guaranteed to fill the row. */
+.st-key-workspace_panel .st-key-source_image button,
+.st-key-workspace_panel .st-key-source_video button,
+.st-key-workspace_panel .st-key-source_camera button {
+  width:100%!important; min-height:49px!important; border-radius:0!important;
+  background:#faf9f5!important; border:1px solid #e4dfcf!important;
+  color:#555!important; font-size:13px!important; font-weight:650!important;
+  transition:background-color .18s ease,border-color .18s ease!important;
 }
-/* ============================================================
-   INPUT SOURCE - full-width 3 equal segments
-   ============================================================ */
-.st-key-workspace_panel [data-testid="stSegmentedControl"] {
-    width:100%!important;
-    max-width:none!important;
+.st-key-workspace_panel .st-key-source_image button:hover,
+.st-key-workspace_panel .st-key-source_video button:hover,
+.st-key-workspace_panel .st-key-source_camera button:hover {
+  background:#fffbe8!important; border-color:#d9c75d!important;
 }
-.st-key-workspace_panel [data-testid="stSegmentedControl"] > div,
-.st-key-workspace_panel [data-testid="stSegmentedControl"] div[data-baseweb="button-group"],
-.st-key-workspace_panel [data-testid="stSegmentedControl"] div[role="group"],
-.st-key-workspace_panel [data-testid="stSegmentedControl"] div[role="radiogroup"] {
-    display:flex!important;
-    width:100%!important;
-    max-width:none!important;
-    flex:1 1 auto!important;
-    gap:0!important;
+.st-key-workspace_panel .st-key-source_image button[kind="primary"],
+.st-key-workspace_panel .st-key-source_video button[kind="primary"],
+.st-key-workspace_panel .st-key-source_camera button[kind="primary"] {
+  background:#fff4a8!important; border-color:#e3cb55!important; color:#1d2230!important;
 }
-.st-key-workspace_panel [data-testid="stSegmentedControl"] button {
-    flex:1 1 0%!important;
-    width:0!important;
-    min-width:0!important;
-    min-height:48px!important;
-    justify-content:center!important;
-    border:1px solid #e4dfcf!important;
-    border-radius:0!important;
-    background-color:#faf9f5!important;
-    color:#555!important;
-    transition:background-color .18s ease,border-color .18s ease!important;
-}
-.st-key-workspace_panel [data-testid="stSegmentedControl"] button:hover {
-    background-color:#fffbe8!important;
-    border-color:#d9c75d!important;
-}
-.st-key-workspace_panel [data-testid="stSegmentedControl"] button[aria-checked="true"],
-.st-key-workspace_panel [data-testid="stSegmentedControl"] button[aria-pressed="true"],
-.st-key-workspace_panel [data-testid="stSegmentedControl"] button[data-state="active"],
-.st-key-workspace_panel [data-testid="stSegmentedControl"] button[aria-selected="true"] {
-    background-color:#fff4a8!important;
-    color:#1d2230!important;
-    border-color:#e3cb55!important;
-}
-.st-key-workspace_panel [data-testid="stSegmentedControl"] button:first-child {
-    border-radius:10px 0 0 10px!important;
-}
-.st-key-workspace_panel [data-testid="stSegmentedControl"] button:last-child {
-    border-radius:0 10px 10px 0!important;
-}
-
+.st-key-workspace_panel .st-key-source_image button{border-radius:10px 0 0 10px!important}
+.st-key-workspace_panel .st-key-source_camera button{border-radius:0 10px 10px 0!important}
+/* Remove column gutters only for the three source buttons. */
+.st-key-source_selector [data-testid="stHorizontalBlock"] {gap:0!important}
+.st-key-source_selector [data-testid="stColumn"] {min-width:0!important}
+.st-key-source_selector [data-testid="stButton"] {width:100%!important}
 /* Dedicated nested media surfaces: gray backdrop, centered 70%-width media. */
 .st-key-input_preview,.st-key-output_preview{background:#f0f0ed!important;background-image:none!important;border:1px solid #dedcd5!important;border-radius:12px!important;padding:16px!important;margin-top:10px!important;margin-bottom:18px!important;box-sizing:border-box!important}
 .st-key-input_preview>div,.st-key-output_preview>div{background:transparent!important}
@@ -232,19 +179,62 @@ def show_result(result: dict | None) -> None:
 
 if "result" not in st.session_state:
     st.session_state.result = None
+if "model_family" not in st.session_state:
+    st.session_state.model_family = "YOLO26"
+if "model_variant" not in st.session_state:
+    st.session_state.model_variant = "Nano (n)"
+if "source" not in st.session_state:
+    st.session_state.source = "Image"
+
+
+def select_model(family: str) -> None:
+    if st.session_state.model_family != family:
+        st.session_state.model_family = family
+        st.session_state.model_variant = "Nano (n)" if family == "YOLO26" else "Large (L)"
+        reset_result()
+
+
+def select_variant(variant_name: str) -> None:
+    if st.session_state.model_variant != variant_name:
+        st.session_state.model_variant = variant_name
+        reset_result()
+
+
+def select_source(source_name: str) -> None:
+    if st.session_state.source != source_name:
+        st.session_state.source = source_name
+        reset_result()
+
 
 header()
-left, right = st.columns([360, 810], gap="small")
+left, right = st.columns([250, 920], gap="small")
 
 with left:
     with st.container(border=True, key="settings_panel"):
         st.markdown('<div class="section-heading">☷ &nbsp; Model Settings</div>', unsafe_allow_html=True)
-        model_family = st.radio("Model", ["YOLO26", "RT-DETR"], key="model_family", on_change=reset_result)
+        st.markdown('**Model**')
+        for family in ("YOLO26", "RT-DETR"):
+            st.button(
+                "◉  " + family if st.session_state.model_family == family else "◯  " + family,
+                key=f"pick_model_{family.lower().replace('-', '_')}",
+                use_container_width=True,
+                type="primary" if st.session_state.model_family == family else "secondary",
+                on_click=select_model, args=(family,),
+            )
+        model_family = st.session_state.model_family
+        st.markdown('**Variant**')
         variants = ["Nano (n)", "Small (s)", "Medium (m)", "Large (l)"] if model_family == "YOLO26" else ["Large (L)"]
-        # Streamlit can retain an old radio choice when the family changes.
-        if st.session_state.get("model_variant") not in variants:
-            st.session_state["model_variant"] = variants[0]
-        variant = st.radio("Variant", variants, key="model_variant", on_change=reset_result)
+        if st.session_state.model_variant not in variants:
+            st.session_state.model_variant = variants[0]
+        for index, item in enumerate(variants):
+            st.button(
+                "◉  " + item if st.session_state.model_variant == item else "◯  " + item,
+                key=f"pick_variant_{index}",
+                use_container_width=True,
+                type="primary" if st.session_state.model_variant == item else "secondary",
+                on_click=select_variant, args=(item,),
+            )
+        variant = st.session_state.model_variant
         confidence = st.number_input("Confidence Threshold", min_value=0.0, max_value=1.0, value=0.50, step=0.01, format="%.2f", key="confidence", on_change=reset_result)
         st.caption("Value between 0.00 and 1.00")
         run_placeholder = st.empty()
@@ -252,7 +242,17 @@ with left:
 with right:
     with st.container(border=True, key="workspace_panel"):
         st.markdown('<div class="section-heading">⇧ &nbsp; Input Source</div>', unsafe_allow_html=True)
-        source = st.segmented_control("Input Source", options=["Image", "Video", "Camera"], default="Image", selection_mode="single", label_visibility="collapsed", key="source", on_change=reset_result)
+        with st.container(key="source_selector"):
+            source_columns = st.columns(3, gap=None)
+            for col, item, symbol in zip(source_columns, ("Image", "Video", "Camera"), ("▧", "▣", "▤")):
+                with col:
+                    st.button(
+                        f"{symbol}  {item}", key=f"source_{item.lower()}",
+                        use_container_width=True,
+                        type="primary" if st.session_state.source == item else "secondary",
+                        on_click=select_source, args=(item,),
+                    )
+        source = st.session_state.source
         upload = None
         if source == "Image":
             upload = st.file_uploader("Upload Image", type=["jpg", "jpeg", "png"], help="Drag and drop an image here, or choose a file from your computer.", key="image_upload", on_change=reset_result)
@@ -299,7 +299,7 @@ with left:
     if source == "Camera":
         run_placeholder.info("For Camera, use START / STOP in the camera panel.")
     else:
-        run = run_placeholder.button("▶  Run Detection", use_container_width=True, type="primary")
+        run = run_placeholder.button("▶  Run Detection", key="run_detection", use_container_width=True, type="primary")
         if run:
             if upload is None:
                 st.warning(f"Please select an {source.lower()} first.")
