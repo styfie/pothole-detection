@@ -46,12 +46,24 @@ header[data-testid="stHeader"]{background:transparent!important}
 .st-key-settings_panel [data-testid="stNumberInput"] [data-baseweb="input"]:focus-within{border-color:#b6a23c!important;box-shadow:0 0 0 2px rgba(240,223,123,.25)!important}
 .stButton button[kind="primary"],button[data-testid="stBaseButton-primary"]{background:linear-gradient(135deg,#ffffc5,#f0df7b)!important;color:var(--ink)!important;border:1px solid #d7c45e!important;border-radius:9px!important;font-size:12px!important;font-weight:800!important;min-height:46px}
 .stButton button[kind="primary"]:hover{background:linear-gradient(135deg,#fffdb6,#e8d66f)!important;color:var(--ink)!important}
-[data-testid="stFileUploaderDropzone"]{background:var(--box)!important;background-image:none!important;border:1px dashed #d8d6cd!important;border-radius:11px!important;min-height:210px}
+[data-testid="stFileUploaderDropzone"]{background:var(--box)!important;background-image:none!important;border:1px dashed #d8d6cd!important;border-radius:11px!important;min-height:0!important;padding:7px 12px!important}
 [data-testid="stFileUploaderDropzone"] button{background:#ffffc5!important;color:var(--ink)!important;border:1px solid #d8c862!important}
-.empty-result{min-height:200px;display:flex;align-items:center;justify-content:center;text-align:center;border:1px dashed #dedcd2;border-radius:11px;background:var(--box)!important;color:#85847d;font-size:12px;padding:25px}
+.empty-result{min-height:160px;display:flex;align-items:center;justify-content:center;text-align:center;border:1px dashed #dedcd2;border-radius:11px;background:var(--box)!important;color:#85847d;font-size:12px;padding:25px}
 .stat-box{background:var(--box);border:1px solid #e9e6d9;border-radius:9px;padding:10px 8px;min-height:70px}
 .stat-label{font-size:10px;font-weight:700;color:var(--muted)}.stat-value{margin-top:7px;font-size:12px;font-weight:800;color:var(--ink);overflow-wrap:anywhere}
 .camera-intro{min-height:95px;text-align:center;padding:16px;background:var(--box);border:1px dashed #d8d6cd;border-radius:9px}.camera-intro strong{font-size:15px}.camera-intro p{font-size:11px;color:#7c7f87;margin:8px 0}
+/* Compact native uploader: keep Streamlit file selection and removal functional. */
+.st-key-workspace_panel [data-testid="stFileUploaderDropzone"]{min-height:0!important;padding:7px 12px!important}
+.st-key-workspace_panel [data-testid="stFileUploaderDropzoneInstructions"]{display:none!important}
+.st-key-workspace_panel [data-testid="stFileUploaderDropzone"] button{min-height:32px!important;padding:4px 12px!important}
+.st-key-workspace_panel [data-testid="stFileUploaderFile"]{padding:5px 10px!important;margin-top:4px!important;background:#f0f0ed!important;border-radius:8px!important}
+.st-key-workspace_panel [data-testid="stFileUploader"]{margin-bottom:2px!important}
+/* Keep the settings panel visually balanced against the right workspace. */
+.st-key-settings_panel{min-height:730px!important}
+/* Comfortable bottom breathing room for the result box. */
+.st-key-workspace_panel{padding-bottom:24px!important;box-sizing:border-box!important}
+/* Preview size is controlled by dedicated columns in Python. */
+@media(max-width:850px){.st-key-settings_panel{min-height:0!important}}
 @media(max-width:850px){.brand-title{font-size:22px}.brand-subtitle{font-size:10px}.app-header{padding:10px 14px}.brand-logo{width:60px;height:55px}.block-container{padding:.7rem!important}}
 """
 st.html(f"<style>{CSS}</style>")
@@ -83,9 +95,13 @@ def show_result(result: dict | None) -> None:
         st.markdown('<div class="empty-result">Detection results will appear here after running the model.</div>', unsafe_allow_html=True)
         return
     if result["kind"] == "image":
-        st.image(result["content"], use_container_width=True)
+        preview_left, preview_center, preview_right = st.columns([1.5, 7, 1.5], gap="small")
+        with preview_center:
+            st.image(result["content"], use_container_width=True)
     else:
-        st.video(result["content"])
+        preview_left, preview_center, preview_right = st.columns([1.5, 7, 1.5], gap="small")
+        with preview_center:
+            st.video(result["content"])
         st.download_button("Download Result Video", result["content"], file_name="pothole_detection_result.mp4", mime="video/mp4", use_container_width=True)
     stats = result["stats"]
     detection_label = f'{stats["detections"]} frame detections' if result["kind"] == "video" else f'{stats["detections"]} potholes'
@@ -109,7 +125,7 @@ if "result" not in st.session_state:
     st.session_state.result = None
 
 header()
-left, right = st.columns([330, 840], gap="small")
+left, right = st.columns([360, 810], gap="small")
 
 with left:
     with st.container(border=True, key="settings_panel"):
@@ -132,13 +148,15 @@ with right:
         if source == "Image":
             upload = st.file_uploader("Upload Image", type=["jpg", "jpeg", "png"], help="Drag and drop an image here, or choose a file from your computer.", key="image_upload", on_change=reset_result)
             if upload is not None:
-                st.caption(upload.name)
-                st.image(upload, use_container_width=True)
+                preview_left, preview_center, preview_right = st.columns([1.5, 7, 1.5], gap="small")
+                with preview_center:
+                    st.image(upload, use_container_width=True)
         elif source == "Video":
             upload = st.file_uploader("Upload Video", type=["mp4", "mov", "avi", "mkv", "webm"], help="MP4, MOV, AVI, MKV, WEBM", key="video_upload", on_change=reset_result)
             if upload is not None:
-                st.caption(upload.name)
-                st.video(upload)
+                preview_left, preview_center, preview_right = st.columns([1.5, 7, 1.5], gap="small")
+                with preview_center:
+                    st.video(upload)
         else:
             st.markdown('<div class="camera-intro"><strong>Browser Camera</strong><p>Open your browser camera for real-time pothole detection.</p></div>', unsafe_allow_html=True)
             st.caption("Camera permission will be requested by your browser")
